@@ -1,6 +1,5 @@
 package dungeonclient;
 
-import game.Player;
 import java.rmi.*;
 
 public interface Notification extends Remote {
