@@ -5,10 +5,13 @@
  */
 package dungeonclient;
 
-import engine.MessageInterpreter;
+import com.bulenkov.darcula.DarculaLaf;
 import game.Player;
+import gui.Main;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
+import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicLookAndFeel;
 import models.Command;
 import models.CommandFactory;
 
@@ -16,21 +19,28 @@ import models.CommandFactory;
  *
  * @author Kurumin
  */
-public class MainFrame extends javax.swing.JFrame {
+public class ChatScreen extends javax.swing.JFrame {
    
     private HashMap<String, Command> cmdMap;
     private boolean shift, nameSet;
     private Player player;
-    private MessageInterpreter gameStarter;
     
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() {
+    public ChatScreen() {
         shift = false;
         nameSet = false;
         player = new Player();
         player.setName("Unamed Player");
+        initComponents();
+        initGame();
+    }
+    
+    public ChatScreen(Player plr) {
+        this.shift = false;
+        this.nameSet = false;
+        this.player = plr;
         initComponents();
         initGame();
     }
@@ -40,8 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
         Command cmdname = cmdfactory.defaultNameCommand();
         cmdMap = new HashMap<>();
         cmdMap.put(cmdname.getPrimary(), cmdname);
-        dungeonChat.setText("[Dungeon Master]: Hello mortal! I need to know your name.\nPlease, type "+cmdname.getPrimary()+" to set a new name for you.\n\n");
-        gameStarter = new MessageInterpreter();
+        dungeonChat.setText("[Dungeon Master]: Hello mortal!\n\n");
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -64,10 +73,9 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Theoretical Implications of Dungeoneering");
         setBackground(new java.awt.Color(0, 0, 0));
         setPreferredSize(new java.awt.Dimension(700, 600));
-
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
 
         jSplitPane1.setBackground(new java.awt.Color(51, 51, 51));
         jSplitPane1.setDividerLocation(180);
@@ -76,7 +84,6 @@ public class MainFrame extends javax.swing.JFrame {
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         dungeonChat.setEditable(false);
-        dungeonChat.setBackground(new java.awt.Color(0, 0, 0));
         dungeonChat.setColumns(20);
         dungeonChat.setForeground(new java.awt.Color(255, 255, 0));
         dungeonChat.setLineWrap(true);
@@ -85,7 +92,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jSplitPane2.setTopComponent(jScrollPane6);
 
-        playerChat.setBackground(new java.awt.Color(0, 0, 0));
         playerChat.setColumns(20);
         playerChat.setForeground(new java.awt.Color(255, 255, 0));
         playerChat.setLineWrap(true);
@@ -105,8 +111,6 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jSplitPane2);
 
         jSplitPane1.setRightComponent(jScrollPane1);
-
-        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -170,9 +174,6 @@ public class MainFrame extends javax.swing.JFrame {
             String chatContent = playerChat.getText();
             dungeonChat.append("["+player.getName()+"]: "+chatContent+"\n");
             playerChat.setText("");
-            
-            String result = gameStarter.interpretMessage(player, chatContent, cmdMap);
-            dungeonChat.append("[Dungeon Master]: "+result+"\n\n");
         }
         else if(shift == true && evt.getKeyCode() == KeyEvent.VK_ENTER){
             playerChat.append("\n");
@@ -183,33 +184,17 @@ public class MainFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            BasicLookAndFeel darcula = new DarculaLaf();
+            UIManager.setLookAndFeel(darcula);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame().setVisible(true);
+                new ChatScreen().setVisible(true);
             }
         });
     }

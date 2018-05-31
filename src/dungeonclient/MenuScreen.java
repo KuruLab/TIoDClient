@@ -9,6 +9,7 @@ import com.bulenkov.darcula.DarculaLaf;
 import dungeonserver.DungeonServer;
 import engine.DungeonGenerator;
 import evoGraph.Config;
+import game.Player;
 import gui.Main;
 import java.io.File;
 import java.rmi.RemoteException;
@@ -30,18 +31,55 @@ public class MenuScreen extends javax.swing.JFrame {
     private DungeonGenerator generator;
     private DungeonServer localServer;
     
+    private ChatScreen chatScreen;
+    
     public MenuScreen() {
         initComponents();
         updateDungeonListComboBox();
     }
     
-    public void toogleInterfaceON_OFF(boolean mode){
+    private void updateDungeonListComboBox(){
+        Config.folder = "." + File.separator + "data" + File.separator + "dungeons" + File.separator + "";
+        File dungeonDirectory = new File(Config.folder);
+        File[] dungeonArray = dungeonDirectory.listFiles();
+        
+        System.out.println("Loading dungeon list...");
+        dungeonCombo.removeAllItems();
+        dungeonCombo.addItem("Select a Dungeon ID");
+        if (dungeonArray.length > 0) {
+            for (int i = 0; i < dungeonArray.length; i++) {
+                if(dungeonArray[i].isDirectory()){
+                    File mapFile = new File(dungeonArray[i], "map_"+dungeonArray[i].getName()+".json");
+                    System.out.print("Checking if "+dungeonArray[i]+" is valid... ");
+                    if(mapFile.exists()){
+                        System.out.println("ok!");
+                        File dungeon = dungeonArray[i];
+                        dungeonCombo.addItem(dungeon.getName());
+                    }
+                    else{
+                        System.err.println("warning: "+dungeonArray[i]+" is not a valid folder.");
+                    }
+                }
+            }
+        }
+        dungeonCombo.repaint();
+        dungeonCombo.validate();
+        dungeonCombo.updateUI();
+    }
+    
+    private void toogleInterfaceON_OFF(boolean mode){
         generateButton.setEnabled(mode);
         hostButton.setEnabled(mode);
         joinButton.setEnabled(mode);
         cancelButton.setEnabled(!mode);
     }
 
+    private Player getNewPlayerInstance(){
+        Player player = new Player();
+        player.setName(playerName.getText());
+        return player;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -229,6 +267,16 @@ public class MenuScreen extends javax.swing.JFrame {
             } catch (RemoteException ex) {
                 Logger.getLogger(MenuScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    chatScreen = new ChatScreen(getNewPlayerInstance());
+                    chatScreen.setVisible(true);
+                }
+            });
+            
+            this.setVisible(false);
+            
         } else{
           JOptionPane.showMessageDialog(null, "Select a dungeon in the list", "Attention!", JOptionPane.ERROR_MESSAGE);
         }
@@ -274,27 +322,7 @@ public class MenuScreen extends javax.swing.JFrame {
                 new MenuScreen().setVisible(true);
             }
         });
-    }
-    
-    private void updateDungeonListComboBox(){
-        Config.folder = "." + File.separator + "data" + File.separator + "dungeons" + File.separator + "";
-        File dungeonDirectory = new File(Config.folder);
-        File[] dungeonArray = dungeonDirectory.listFiles();
-        
-        System.out.println("Loading dungeon list...");
-        dungeonCombo.removeAllItems();
-        dungeonCombo.addItem("Select a Dungeon ID");
-        if (dungeonArray.length > 0) {
-            for (int i = 0; i < dungeonArray.length; i++) {
-                System.out.println(dungeonArray[i]);
-                File dungeon = dungeonArray[i];
-                dungeonCombo.addItem(dungeon.getName());
-            }
-        }
-        dungeonCombo.repaint();
-        dungeonCombo.validate();
-        dungeonCombo.updateUI();
-    }
+    } 
 
     class IPTextFieldVerifier {
 
