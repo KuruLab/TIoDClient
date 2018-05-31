@@ -258,15 +258,15 @@ public class DungeonGenerator implements Runnable {
         }
         EvoJSONFileWriter fw = new EvoJSONFileWriter(g);
         System.out.println("Exporting Map\n"+
-                dir+"\\data_"+dungeonName+".json\n"+
-                dir+"\\map_"+dungeonName+".json");
-        fw.exportDataJSON(dir+"\\data_"+dungeonName+".json",
+                File.separator+"data_"+dungeonName+".json\n"+
+                File.separator+"map_"+dungeonName+".json");
+        fw.exportDataJSON(dir+File.separator+"data_"+dungeonName+".json",
                 "GraphStream", maxX, maxY, true);
-        fw.exportMapJSON(dir+"\\map_"+dungeonName+".json",
+        fw.exportMapJSON(dir+File.separator+"map_"+dungeonName+".json",
                 "Evolutionary"+BarabasiAlbertGenerator.class.getSimpleName(), true);
         
         // export PNG
-        GraphImageBuilder gib = new GraphImageBuilder(dir+"\\img_"+dungeonName+".png");
+        GraphImageBuilder gib = new GraphImageBuilder(dir+File.separator+"img_"+dungeonName+".png");
         gib.buildImage(g);
     }
 }
