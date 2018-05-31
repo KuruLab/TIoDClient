@@ -16,7 +16,6 @@ import graphstream.GraphStreamUtil;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import org.graphstream.algorithm.generator.BarabasiAlbertGenerator;
