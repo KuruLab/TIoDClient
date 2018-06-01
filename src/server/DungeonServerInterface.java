@@ -9,11 +9,11 @@ import client.Notification;
 //
 public interface DungeonServerInterface extends Remote {
 
-    public void juntar(Notification n, String name) throws RemoteException;
+    public void join(Notification n, String name) throws RemoteException;
 
-    public void conversar(String name, String s) throws RemoteException;
+    public void talk(String name, String s) throws RemoteException;
 
-    public void deixar(Notification n, String name) throws RemoteException;
+    public void leave(Notification n, String name) throws RemoteException;
 
     //public void playerIsReady(int slot, boolean isReady) throws RemoteException;
 

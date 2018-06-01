@@ -1,23 +1,25 @@
-package dungeonclient;
+package client;
 
 import game.Player;
 import java.rmi.*;
 import java.rmi.server.*;
+import javax.swing.JTextArea;
 
 public class Remote_Implementation extends UnicastRemoteObject implements Notification {
     
     private static final String baseURL = "./";
     
     // GUI modificada pelo servidor
-    private javax.swing.JTextArea textArea;
+    private JTextArea textArea;
     private String name;
     private Player player;
 
     // *******************************************************************************************
     // Construtor da classe Remote_Implementation que recebe uma área de texto para mostrar as mensagens
     // *******************************************************************************************
-    public Remote_Implementation() throws RemoteException {
-            
+    public Remote_Implementation(Player player, JTextArea text) throws RemoteException {
+           this.player = player;
+           this.textArea = text;
     }
 
     // **************************************************************************************** 
@@ -25,18 +27,14 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     // **************************************************************************************** 
     @Override
     @SuppressWarnings("empty-statement")
-    public void juntarMensagem(String name, int slot) throws RemoteException {
+    public void joinMessage(String name) throws RemoteException {
         try {
-            // Metodo Antigo
-            //textArea.append(name + " juntou-se \n");
             setName(name);
-            if(slot!=-1)
-                textArea.append(name + " entrou na posição " + slot + "...\n");
-            else
-                textArea.append(name + " entrou como espectador.\n");
-            //System.out.println("JuntarMensagem= "+ getName());
+            textArea.append(name + " joined the game...\n");
+            
+            System.out.println("JoinMessage -> "+ getName());
         } catch (Exception e) {
-            System.out.println("DisplayMessage -> Falha no envio da Mesagem");
+            System.out.println("DisplayMessage -> Error sending the message.");
         };
     }
 
@@ -45,11 +43,11 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     // ****************************************************************************************     
     @Override
     @SuppressWarnings("empty-statement")
-    public void enviarMensagem(String name, String message) throws RemoteException {
+    public void sendMessage(String name, String message) throws RemoteException {
         try {
-            textArea.append(name + " diz : " + message + "\n");
+            textArea.append(name + " says : " + message + "\n");
         } catch (Exception e) {
-            System.out.println("Remote_Cliente_Impl -> Falha no envio da Mesagem");
+            System.out.println("Remote_Cliente_Impl -> Error sending the message.");
         };
     }
 
@@ -58,12 +56,12 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     // ****************************************************************************************        
     @Override
     @SuppressWarnings("empty-statement")
-    public void sairMensagem(String name) throws RemoteException {
+    public void leaveMessage(String name) throws RemoteException {
         try {
-            textArea.append(name + " deixou o chat.\n");
-            System.out.println("Remote_Cliente_Impl -> O Cliente " + name + " deixou o chat.\n");
+            textArea.append(name + " left the chat.\n");
+            System.out.println("Remote_Cliente_Impl -> The client " + name + " left the chat.\n");
         } catch (Exception e) {
-            System.out.println("Remote_Cliente_Impl -> Falha no envio da Mesagem");
+            System.out.println("Remote_Cliente_Impl -> Error sending the message.");
         };
     }
 

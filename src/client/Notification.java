@@ -1,14 +1,14 @@
-package dungeonclient;
+package client;
 
 import java.rmi.*;
 
 public interface Notification extends Remote {
 
-    public void juntarMensagem(String name, int I) throws RemoteException;
+    public void joinMessage(String name) throws RemoteException;
 
-    public void enviarMensagem(String name, String message) throws RemoteException;
+    public void sendMessage(String name, String message) throws RemoteException;
 
-    public void sairMensagem(String name) throws RemoteException;
+    public void leaveMessage(String name) throws RemoteException;
 
     //public void playerIsReady(int slot, boolean isReady) throws RemoteException;
 
