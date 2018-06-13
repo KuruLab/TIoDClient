@@ -1,0 +1,422 @@
+{
+"graph": "Pretorian Tombs",
+"generator": "EvolutionaryBarabasiAlbertGenerator",
+"ui.antialias": true,
+"ui.quality": true,
+"nodes": [
+	{
+		"id": "0",
+		"position": [174.0, 168.0, 0.0],
+		"width": 46.0,
+		"height": 46.0,
+		"degree": 6,
+		"intensity": 0.284192,
+		"symbol": "0",
+		"condition": "0"
+	},
+	{
+		"id": "1",
+		"position": [51.0, 176.0, 0.0],
+		"width": 34.0,
+		"height": 34.0,
+		"degree": 4,
+		"intensity": 0.608366,
+		"symbol": "0",
+		"condition": "B"
+	},
+	{
+		"id": "2",
+		"position": [51.0, 150.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 1.000000,
+		"symbol": "Boss",
+		"condition": "D"
+	},
+	{
+		"id": "3",
+		"position": [101.0, 217.0, 0.0],
+		"width": 34.0,
+		"height": 34.0,
+		"degree": 4,
+		"intensity": 0.842374,
+		"symbol": "0",
+		"condition": "B"
+	},
+	{
+		"id": "4",
+		"position": [51.0, 218.0, 0.0],
+		"width": 22.0,
+		"height": 22.0,
+		"degree": 2,
+		"intensity": 0.728359,
+		"symbol": "0",
+		"condition": "B"
+	},
+	{
+		"id": "5",
+		"position": [173.0, 100.0, 0.0],
+		"width": 28.0,
+		"height": 28.0,
+		"degree": 3,
+		"intensity": 0.386763,
+		"symbol": "0",
+		"condition": "0"
+	},
+	{
+		"id": "6",
+		"position": [288.0, 144.0, 0.0],
+		"width": 28.0,
+		"height": 28.0,
+		"degree": 3,
+		"intensity": 0.449023,
+		"symbol": "0",
+		"condition": "A"
+	},
+	{
+		"id": "7",
+		"position": [174.0, 228.0, 0.0],
+		"width": 28.0,
+		"height": 28.0,
+		"degree": 3,
+		"intensity": 0.190099,
+		"symbol": "0",
+		"condition": "0"
+	},
+	{
+		"id": "8",
+		"position": [353.0, 144.0, 0.0],
+		"width": 22.0,
+		"height": 22.0,
+		"degree": 2,
+		"intensity": 0.532998,
+		"symbol": "0",
+		"condition": "A"
+	},
+	{
+		"id": "9",
+		"position": [24.0, 176.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 0.678264,
+		"symbol": "0",
+		"condition": "B"
+	},
+	{
+		"id": "10",
+		"position": [101.0, 326.0, 0.0],
+		"width": 22.0,
+		"height": 22.0,
+		"degree": 2,
+		"intensity": 0.912011,
+		"symbol": "0",
+		"condition": "B"
+	},
+	{
+		"id": "11",
+		"position": [100.0, 160.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 0.696153,
+		"symbol": "0",
+		"condition": "C"
+	},
+	{
+		"id": "12",
+		"position": [171.0, 326.0, 0.0],
+		"width": 28.0,
+		"height": 28.0,
+		"degree": 3,
+		"intensity": 0.755360,
+		"symbol": "0",
+		"condition": "C"
+	},
+	{
+		"id": "13",
+		"position": [135.0, 217.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 0.719156,
+		"symbol": "0",
+		"condition": "C"
+	},
+	{
+		"id": "14",
+		"position": [221.0, 228.0, 0.0],
+		"width": 22.0,
+		"height": 22.0,
+		"degree": 2,
+		"intensity": 0.099899,
+		"symbol": "0",
+		"condition": "0"
+	},
+	{
+		"id": "15",
+		"position": [171.0, 372.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 0.990000,
+		"symbol": "D",
+		"condition": "C"
+	},
+	{
+		"id": "16",
+		"position": [354.0, 111.0, 0.0],
+		"width": 28.0,
+		"height": 28.0,
+		"degree": 3,
+		"intensity": 0.612581,
+		"symbol": "0",
+		"condition": "A"
+	},
+	{
+		"id": "17",
+		"position": [173.0, 61.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 0.437511,
+		"symbol": "0",
+		"condition": "A"
+	},
+	{
+		"id": "18",
+		"position": [246.0, 228.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 0.000000,
+		"symbol": "Start",
+		"condition": "0"
+	},
+	{
+		"id": "19",
+		"position": [376.0, 111.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 0.586385,
+		"symbol": "C",
+		"condition": "B"
+	},
+	{
+		"id": "20",
+		"position": [288.0, 111.0, 0.0],
+		"width": 28.0,
+		"height": 28.0,
+		"degree": 3,
+		"intensity": 0.686701,
+		"symbol": "0",
+		"condition": "A"
+	},
+	{
+		"id": "21",
+		"position": [289.0, 65.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 0.761840,
+		"symbol": "B",
+		"condition": "A"
+	},
+	{
+		"id": "22",
+		"position": [198.0, 100.0, 0.0],
+		"width": 22.0,
+		"height": 22.0,
+		"degree": 2,
+		"intensity": 0.481955,
+		"symbol": "0",
+		"condition": "0"
+	},
+	{
+		"id": "23",
+		"position": [220.0, 100.0, 0.0],
+		"width": 16.0,
+		"height": 16.0,
+		"degree": 1,
+		"intensity": 0.569400,
+		"symbol": "A",
+		"condition": "0"
+	},
+	{
+		"id": "24",
+		"position": [171.0, 284.0, 0.0],
+		"width": 22.0,
+		"height": 22.0,
+		"degree": 2,
+		"intensity": 0.758802,
+		"symbol": "0",
+		"condition": "C"
+	}
+],
+"edges": [
+	{
+		"id": "0_1",
+		"a": "0",
+		"b": "1",
+		"symbol": "B"
+	},
+	{
+		"id": "0_3",
+		"a": "0",
+		"b": "3",
+		"symbol": "B"
+	},
+	{
+		"id": "0_5",
+		"a": "0",
+		"b": "5",
+		"symbol": "0"
+	},
+	{
+		"id": "0_6",
+		"a": "0",
+		"b": "6",
+		"symbol": "A"
+	},
+	{
+		"id": "0_7",
+		"a": "0",
+		"b": "7",
+		"symbol": "0"
+	},
+	{
+		"id": "0_11",
+		"a": "0",
+		"b": "11",
+		"symbol": "C"
+	},
+	{
+		"id": "1_2",
+		"a": "1",
+		"b": "2",
+		"symbol": "D"
+	},
+	{
+		"id": "1_4",
+		"a": "1",
+		"b": "4",
+		"symbol": "0"
+	},
+	{
+		"id": "1_9",
+		"a": "1",
+		"b": "9",
+		"symbol": "0"
+	},
+	{
+		"id": "3_4",
+		"a": "3",
+		"b": "4",
+		"symbol": "0"
+	},
+	{
+		"id": "3_10",
+		"a": "3",
+		"b": "10",
+		"symbol": "0"
+	},
+	{
+		"id": "3_13",
+		"a": "3",
+		"b": "13",
+		"symbol": "C"
+	},
+	{
+		"id": "5_17",
+		"a": "5",
+		"b": "17",
+		"symbol": "A"
+	},
+	{
+		"id": "5_22",
+		"a": "5",
+		"b": "22",
+		"symbol": "0"
+	},
+	{
+		"id": "6_8",
+		"a": "6",
+		"b": "8",
+		"symbol": "0"
+	},
+	{
+		"id": "6_20",
+		"a": "6",
+		"b": "20",
+		"symbol": "0"
+	},
+	{
+		"id": "7_14",
+		"a": "7",
+		"b": "14",
+		"symbol": "0"
+	},
+	{
+		"id": "7_24",
+		"a": "7",
+		"b": "24",
+		"symbol": "C"
+	},
+	{
+		"id": "8_16",
+		"a": "8",
+		"b": "16",
+		"symbol": "0"
+	},
+	{
+		"id": "10_12",
+		"a": "10",
+		"b": "12",
+		"symbol": "C"
+	},
+	{
+		"id": "12_15",
+		"a": "12",
+		"b": "15",
+		"symbol": "0"
+	},
+	{
+		"id": "12_24",
+		"a": "12",
+		"b": "24",
+		"symbol": "0"
+	},
+	{
+		"id": "14_18",
+		"a": "14",
+		"b": "18",
+		"symbol": "0"
+	},
+	{
+		"id": "16_19",
+		"a": "16",
+		"b": "19",
+		"symbol": "B"
+	},
+	{
+		"id": "16_20",
+		"a": "16",
+		"b": "20",
+		"symbol": "0"
+	},
+	{
+		"id": "20_21",
+		"a": "20",
+		"b": "21",
+		"symbol": "0"
+	},
+	{
+		"id": "22_23",
+		"a": "22",
+		"b": "23",
+		"symbol": "0"
+	}
+]
+}

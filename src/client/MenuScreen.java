@@ -7,7 +7,7 @@ package client;
 
 import com.bulenkov.darcula.DarculaLaf;
 import server.DungeonServer;
-import engine.DungeonGenerator;
+import engine.LevelGenerator;
 import evoGraph.Config;
 import game.Player;
 import gui.Main;
@@ -28,43 +28,43 @@ import javax.swing.plaf.basic.BasicLookAndFeel;
  */
 public class MenuScreen extends javax.swing.JFrame {
 
-    private DungeonGenerator generator;
+    private LevelGenerator generator;
     private DungeonServer localServer;
     
     private ChatScreen chatScreen;
     
     public MenuScreen() {
         initComponents();
-        updateDungeonListComboBox();
+        updateLevelListComboBox();
     }
     
-    private void updateDungeonListComboBox(){
-        Config.folder = "." + File.separator + "data" + File.separator + "dungeons" + File.separator + "";
-        File dungeonDirectory = new File(Config.folder);
-        File[] dungeonArray = dungeonDirectory.listFiles();
+    private void updateLevelListComboBox(){
+        Config.folder = "." + File.separator + "data" + File.separator + "levels" + File.separator + "";
+        File levelDirectory = new File(Config.folder);
+        File[] levelArray = levelDirectory.listFiles();
         
-        System.out.println("Loading dungeon list...");
-        dungeonCombo.removeAllItems();
-        dungeonCombo.addItem("Select a Dungeon ID");
-        if (dungeonArray.length > 0) {
-            for (int i = 0; i < dungeonArray.length; i++) {
-                if(dungeonArray[i].isDirectory()){
-                    File mapFile = new File(dungeonArray[i], "map_"+dungeonArray[i].getName()+".json");
-                    System.out.print("Checking if "+dungeonArray[i]+" is valid... ");
+        System.out.println("Loading level list...");
+        levelCombo.removeAllItems();
+        levelCombo.addItem("Select a Level ID");
+        if (levelArray.length > 0) {
+            for (int i = 0; i < levelArray.length; i++) {
+                if(levelArray[i].isDirectory()){
+                    File mapFile = new File(levelArray[i], "map_"+levelArray[i].getName()+".json");
+                    System.out.print("Checking if "+levelArray[i]+" is valid... ");
                     if(mapFile.exists()){
                         System.out.println("ok!");
-                        File dungeon = dungeonArray[i];
-                        dungeonCombo.addItem(dungeon.getName());
+                        File level = levelArray[i];
+                        levelCombo.addItem(level.getName());
                     }
                     else{
-                        System.err.println("warning: "+dungeonArray[i]+" is not a valid folder.");
+                        System.err.println("warning: "+levelArray[i]+" is not a valid folder.");
                     }
                 }
             }
         }
-        dungeonCombo.repaint();
-        dungeonCombo.validate();
-        dungeonCombo.updateUI();
+        levelCombo.repaint();
+        levelCombo.validate();
+        levelCombo.updateUI();
     }
     
     private void toogleInterfaceON_OFF(boolean mode){
@@ -93,7 +93,7 @@ public class MenuScreen extends javax.swing.JFrame {
         playerName = new javax.swing.JTextField();
         hostButton = new javax.swing.JButton();
         joinButton = new javax.swing.JButton();
-        dungeonCombo = new javax.swing.JComboBox<>();
+        levelCombo = new javax.swing.JComboBox<>();
         generateButton = new javax.swing.JButton();
         ipTextField = new javax.swing.JTextField();
         progress = new javax.swing.JProgressBar();
@@ -120,7 +120,7 @@ public class MenuScreen extends javax.swing.JFrame {
             }
         });
 
-        dungeonCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select a Dungeon ID" }));
+        levelCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select a Level ID" }));
 
         generateButton.setText("Generate New");
         generateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -157,7 +157,7 @@ public class MenuScreen extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(ipTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dungeonCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, 200, Short.MAX_VALUE)
+                            .addComponent(levelCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, 200, Short.MAX_VALUE)
                             .addComponent(playerName)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -179,7 +179,7 @@ public class MenuScreen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(hostButton)
-                    .addComponent(dungeonCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(levelCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(joinButton)
@@ -208,9 +208,9 @@ public class MenuScreen extends javax.swing.JFrame {
     }                                          
 
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        String dungeonName = JOptionPane.showInputDialog(null, "Enter the name of the new dungeon or leave blank for default ID", "Dungeon Generator", JOptionPane.QUESTION_MESSAGE);
+        String levelName = JOptionPane.showInputDialog(null, "Enter the name of the new level or leave blank for default ID", "Level Generator", JOptionPane.QUESTION_MESSAGE);
         toogleInterfaceON_OFF(false);
-        generator = new DungeonGenerator(dungeonName, progress, statusLabel);
+        generator = new LevelGenerator(levelName, progress, statusLabel);
         SwingWorker worker1 = new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
@@ -237,7 +237,7 @@ public class MenuScreen extends javax.swing.JFrame {
                         }
                         System.out.println("Job done!");
                         toogleInterfaceON_OFF(true);
-                        updateDungeonListComboBox();
+                        updateLevelListComboBox();
                     }
                 });
                 thread.start();
@@ -248,10 +248,10 @@ public class MenuScreen extends javax.swing.JFrame {
     }                                              
 
     private void hostButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        int index = dungeonCombo.getSelectedIndex();
+        int index = levelCombo.getSelectedIndex();
         if(index > 0){
             try {
-                String id = (String) dungeonCombo.getSelectedItem();
+                String id = (String) levelCombo.getSelectedItem();
                 localServer = new DungeonServer(id);
                 
                 SwingWorker worker = new SwingWorker() {
@@ -278,7 +278,7 @@ public class MenuScreen extends javax.swing.JFrame {
             this.setVisible(false);
             
         } else{
-          JOptionPane.showMessageDialog(null, "Select a dungeon in the list", "Attention!", JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(null, "Select a level in the list", "Attention!", JOptionPane.ERROR_MESSAGE);
         }
     }                                          
 
@@ -360,7 +360,7 @@ public class MenuScreen extends javax.swing.JFrame {
 
     // Variables declaration - do not modify                     
     private javax.swing.JButton cancelButton;
-    private javax.swing.JComboBox<String> dungeonCombo;
+    private javax.swing.JComboBox<String> levelCombo;
     private javax.swing.JButton generateButton;
     private javax.swing.JButton hostButton;
     private javax.swing.JTextField ipTextField;
