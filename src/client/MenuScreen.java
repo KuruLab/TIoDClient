@@ -1,12 +1,22 @@
-/*//GEN-FIRST:event_joinButtonActionPerformed
- * To change this license header, choose License Headers in Project Properties.//GEN-LAST:event_joinButtonActionPerformed
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * Copyright (C) 2018 Kurumin
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package client;
 
 import com.bulenkov.darcula.DarculaLaf;
-import server.DungeonServer;
 import engine.LevelGenerator;
 import evoGraph.Config;
 import game.Player;
@@ -14,13 +24,13 @@ import gui.Main;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicLookAndFeel;
+import server.DungeonServer;
 
 /**
  *
@@ -30,34 +40,32 @@ public class MenuScreen extends javax.swing.JFrame {
 
     private LevelGenerator generator;
     private DungeonServer localServer;
-    
+
     private ChatScreen chatScreen;
-    
+
     public MenuScreen() {
         initComponents();
-        updateLevelListComboBox();
     }
-    
-    private void updateLevelListComboBox(){
+
+    private void updateLevelListComboBox() {
         Config.folder = "." + File.separator + "data" + File.separator + "levels" + File.separator + "";
         File levelDirectory = new File(Config.folder);
         File[] levelArray = levelDirectory.listFiles();
-        
+
         System.out.println("Loading level list...");
         levelCombo.removeAllItems();
         levelCombo.addItem("Select a Level ID");
         if (levelArray.length > 0) {
             for (int i = 0; i < levelArray.length; i++) {
-                if(levelArray[i].isDirectory()){
-                    File mapFile = new File(levelArray[i], "map_"+levelArray[i].getName()+".json");
-                    System.out.print("Checking if "+levelArray[i]+" is valid... ");
-                    if(mapFile.exists()){
+                if (levelArray[i].isDirectory()) {
+                    File mapFile = new File(levelArray[i], "map_" + levelArray[i].getName() + ".json");
+                    System.out.print("Checking if " + levelArray[i] + " is valid... ");
+                    if (mapFile.exists()) {
                         System.out.println("ok!");
                         File level = levelArray[i];
                         levelCombo.addItem(level.getName());
-                    }
-                    else{
-                        System.err.println("warning: "+levelArray[i]+" is not a valid folder.");
+                    } else {
+                        System.err.println("warning: " + levelArray[i] + " is not a valid folder.");
                     }
                 }
             }
@@ -66,39 +74,181 @@ public class MenuScreen extends javax.swing.JFrame {
         levelCombo.validate();
         levelCombo.updateUI();
     }
-    
-    private void toogleInterfaceON_OFF(boolean mode){
+
+    private void toogleInterfaceON_OFF(boolean mode) {
         generateButton.setEnabled(mode);
         hostButton.setEnabled(mode);
         joinButton.setEnabled(mode);
         cancelButton.setEnabled(!mode);
     }
 
-    private Player getNewPlayerInstance(){
+    private Player getNewPlayerInstance() {
         Player player = new Player();
         player.setName(playerName.getText());
         return player;
     }
-    
+
+    private void join() {
+        IPTextFieldVerifier verifier = new IPTextFieldVerifier();
+        if (verifier.verify(ipTextField)) {
+            System.out.println("IP Verified!");
+        } else {
+            ipTextField.setText("127.0.0.1");
+        }
+    }
+
+    private void host() {
+        int index = levelCombo.getSelectedIndex();
+        if (index > 0) {
+            try {
+                String id = (String) levelCombo.getSelectedItem();
+                localServer = new DungeonServer(id);
+
+                SwingWorker worker = new SwingWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        Thread thread = new Thread(localServer);
+                        thread.start();
+
+                        return null;
+                    }
+                };
+                worker.run();
+            } catch (RemoteException ex) {
+                Logger.getLogger(getClass().getName(), ex.getMessage());
+            }
+
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    chatScreen = new ChatScreen(getNewPlayerInstance());
+                    chatScreen.setVisible(true);
+                }
+            });
+
+            this.setVisible(false);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Select a level in the list", "Attention!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void generate() {
+        String levelName = JOptionPane.showInputDialog(null, "Enter the name of the new level or leave blank for default ID", "Level Generator", JOptionPane.QUESTION_MESSAGE);
+        toogleInterfaceON_OFF(false);
+        generator = new LevelGenerator(levelName, progress, statusLabel);
+        SwingWorker worker1 = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                Thread thread = new Thread(generator);
+                thread.start();
+
+                return null;
+            }
+        };
+        worker1.run();
+
+        SwingWorker worker2 = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!generator.isFinished()) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(getClass().getName(), ex.getMessage());
+                            }
+                        }
+                        System.out.println("Job done!");
+                        toogleInterfaceON_OFF(true);
+                        updateLevelListComboBox();
+                    }
+                });
+                thread.start();
+                return null;
+            }
+        };
+        worker2.run();
+    }
+
+    private void cancellGeneration() {
+        generator.setFinished(true);
+        SwingWorker worker = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(1500);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(getClass().getName(), ex.getMessage());
+                        }
+                        statusLabel.setText("Cancelled.");
+                        progress.setValue(0);
+                    }
+                });
+                thread.start();
+
+                return null;
+            }
+        };
+        worker.run();
+    }
+
+    class IPTextFieldVerifier {
+
+        public boolean verify(JTextField input) {
+            try {
+                String ipText = input.getText();
+                if (ipText != null || ipText.isEmpty()) {
+                    int numberCount = 0;
+                    StringTokenizer st = new StringTokenizer(ipText, ".");
+                    while (st.hasMoreTokens()) {
+                        int value = Integer.parseInt((String) st.nextToken());
+                        if (value < 0 || value > 255) {
+                            return malformedIPAddress();
+                        }
+                        numberCount++;
+                    }
+                    if (numberCount == 4) {
+                        return true;
+                    } else {
+                        return malformedIPAddress();
+                    }
+                }
+                return false;
+            } catch (java.lang.NumberFormatException ex) {
+                return malformedIPAddress();
+            }
+        }
+
+        public boolean malformedIPAddress() {
+            JOptionPane.showMessageDialog(null, "Malformed IP Address!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
         playerName = new javax.swing.JTextField();
         hostButton = new javax.swing.JButton();
-        joinButton = new javax.swing.JButton();
         levelCombo = new javax.swing.JComboBox<>();
-        generateButton = new javax.swing.JButton();
+        joinButton = new javax.swing.JButton();
         ipTextField = new javax.swing.JTextField();
+        generateButton = new javax.swing.JButton();
         progress = new javax.swing.JProgressBar();
-        statusLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
+        statusLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -113,6 +263,8 @@ public class MenuScreen extends javax.swing.JFrame {
             }
         });
 
+        levelCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select a Dungeon ID" }));
+
         joinButton.setText("Join");
         joinButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,7 +272,7 @@ public class MenuScreen extends javax.swing.JFrame {
             }
         });
 
-        levelCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select a Level ID" }));
+        ipTextField.setText("127.0.0.1");
 
         generateButton.setText("Generate New");
         generateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -128,8 +280,6 @@ public class MenuScreen extends javax.swing.JFrame {
                 generateButtonActionPerformed(evt);
             }
         });
-
-        ipTextField.setText("127.0.0.1");
 
         progress.setForeground(new java.awt.Color(255, 102, 2));
         progress.setToolTipText("");
@@ -196,116 +346,23 @@ public class MenuScreen extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    private void joinButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        IPTextFieldVerifier verifier = new IPTextFieldVerifier();
-        if (verifier.verify(ipTextField)) {
-            System.out.println("IP Verified!");
-        } else {
-            ipTextField.setText("127.0.0.1");
-        }
-    }                                          
+    private void hostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hostButtonActionPerformed
+        host();
+    }//GEN-LAST:event_hostButtonActionPerformed
 
-    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        String levelName = JOptionPane.showInputDialog(null, "Enter the name of the new level or leave blank for default ID", "Level Generator", JOptionPane.QUESTION_MESSAGE);
-        toogleInterfaceON_OFF(false);
-        generator = new LevelGenerator(levelName, progress, statusLabel);
-        SwingWorker worker1 = new SwingWorker() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                Thread thread = new Thread(generator);
-                thread.start();
+    private void joinButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinButtonActionPerformed
+        join();
+    }//GEN-LAST:event_joinButtonActionPerformed
 
-                return null;
-            }
-        };
-        worker1.run();
-       
-        SwingWorker worker2 = new SwingWorker() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (!generator.isFinished()) {
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(MenuScreen.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                        System.out.println("Job done!");
-                        toogleInterfaceON_OFF(true);
-                        updateLevelListComboBox();
-                    }
-                });
-                thread.start();
-                return null;
-            }
-        };
-        worker2.run();
-    }                                              
+    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
+        generate();
+    }//GEN-LAST:event_generateButtonActionPerformed
 
-    private void hostButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        int index = levelCombo.getSelectedIndex();
-        if(index > 0){
-            try {
-                String id = (String) levelCombo.getSelectedItem();
-                localServer = new DungeonServer(id);
-                
-                SwingWorker worker = new SwingWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        Thread thread = new Thread(localServer);
-                        thread.start();
-                        
-                        return null;
-                    }
-                };
-                worker.run();
-            } catch (RemoteException ex) {
-                Logger.getLogger(MenuScreen.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    chatScreen = new ChatScreen(getNewPlayerInstance());
-                    chatScreen.setVisible(true);
-                }
-            });
-            
-            this.setVisible(false);
-            
-        } else{
-          JOptionPane.showMessageDialog(null, "Select a level in the list", "Attention!", JOptionPane.ERROR_MESSAGE);
-        }
-    }                                          
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        generator.setFinished(true);
-        SwingWorker worker = new SwingWorker() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(1500);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(MenuScreen.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        statusLabel.setText("Cancelled.");
-                        progress.setValue(0);
-                    }
-                });
-                thread.start();
-
-                return null;
-            }
-        };
-        worker.run();
-    }                                            
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        cancellGeneration();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -319,55 +376,21 @@ public class MenuScreen extends javax.swing.JFrame {
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MenuScreen().setVisible(true);
+                new VaalMenuScreen().setVisible(true);
             }
         });
-    } 
-
-    class IPTextFieldVerifier {
-
-        public boolean verify(JTextField input) {
-            try{
-                String ipText = input.getText();
-                if (ipText != null || ipText.isEmpty()) {
-                    int numberCount = 0;
-                    StringTokenizer st = new StringTokenizer(ipText, ".");
-                    while (st.hasMoreTokens()) {
-                        int value = Integer.parseInt((String) st.nextToken());
-                        if (value < 0 || value > 255) {
-                            return malformedIPAddress();
-                        }
-                        numberCount++;
-                    }
-                    if(numberCount == 4)
-                        return true;
-                    else{
-                        return malformedIPAddress();
-                    }
-                }
-                return false;
-            }
-            catch(java.lang.NumberFormatException ex){
-                return malformedIPAddress();
-            }
-        }
-        
-        public boolean malformedIPAddress(){
-            JOptionPane.showMessageDialog(null, "Malformed IP Address!", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-        }
     }
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JComboBox<String> levelCombo;
     private javax.swing.JButton generateButton;
     private javax.swing.JButton hostButton;
     private javax.swing.JTextField ipTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton joinButton;
+    private javax.swing.JComboBox<String> levelCombo;
     private javax.swing.JTextField playerName;
     private javax.swing.JProgressBar progress;
     private javax.swing.JLabel statusLabel;
-    // End of variables declaration                   
+    // End of variables declaration//GEN-END:variables
 }
