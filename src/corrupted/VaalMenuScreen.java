@@ -12,7 +12,7 @@ import com.bulenkov.darcula.DarculaLaf;
 import server.DungeonServer;
 import engine.LevelGenerator;
 import evoGraph.Config;
-import game.Player;
+import game.CorePlayer;
 import gui.Main;
 import java.io.File;
 import java.rmi.RemoteException;
@@ -77,9 +77,9 @@ public class VaalMenuScreen extends javax.swing.JFrame {
         cancelButton.setEnabled(!mode);
     }
 
-    private Player getNewPlayerInstance(){
-        Player player = new Player();
-        player.setName(playerName.getText());
+    private CorePlayer getNewPlayerInstance(){
+        CorePlayer player = new CorePlayer(playerName.getText());
+        //player.setName();
         return player;
     }
     
@@ -273,7 +273,7 @@ public class VaalMenuScreen extends javax.swing.JFrame {
             
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
-                    chatScreen = new ChatScreen(getNewPlayerInstance());
+                    //chatScreen = new ChatScreen(getNewPlayerInstance());
                     chatScreen.setVisible(true);
                 }
             });

@@ -1,6 +1,6 @@
 package client;
 
-import game.Player;
+import game.CorePlayer;
 import java.rmi.*;
 import java.rmi.server.*;
 import javax.swing.JTextArea;
@@ -12,12 +12,12 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     // GUI modificada pelo servidor
     private JTextArea textArea;
     private String name;
-    private Player player;
+    private CorePlayer player;
 
     // *******************************************************************************************
     // Construtor da classe Remote_Implementation que recebe uma área de texto para mostrar as mensagens
     // *******************************************************************************************
-    public Remote_Implementation(Player player, JTextArea text) throws RemoteException {
+    public Remote_Implementation(CorePlayer player, JTextArea text) throws RemoteException {
            this.player = player;
            this.textArea = text;
     }

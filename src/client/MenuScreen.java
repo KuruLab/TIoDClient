@@ -16,17 +16,16 @@
  */
 package client;
 
-import corrupted.VaalMenuScreen;
 import com.bulenkov.darcula.DarculaLaf;
 import engine.DungeonGenerator;
 import engine.LevelGenerator;
-import game.Player;
+import game.CorePlayer;
+
 import gui.Main;
 import java.io.File;
 import java.io.FileFilter;
 import java.rmi.RemoteException;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -95,9 +94,8 @@ public class MenuScreen extends javax.swing.JFrame {
         cancelButton.setEnabled(!mode);
     }
 
-    private Player getNewPlayerInstance() {
-        Player player = new Player();
-        player.setName(playerName.getText());
+    private CorePlayer getNewPlayerInstance() {
+        CorePlayer player = new CorePlayer(playerName.getText()); // -> player.setName(playerName.getText());
         return player;
     }
 

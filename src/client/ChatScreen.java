@@ -1,7 +1,9 @@
 package client;
 
 import com.bulenkov.darcula.DarculaLaf;
-import game.Player;
+
+import game.CorePlayer;
+
 import gui.Main;
 import java.awt.event.KeyEvent;
 import java.rmi.Naming;
@@ -24,7 +26,7 @@ public class ChatScreen extends javax.swing.JFrame {
    
     private HashMap<String, Command> cmdMap;
     private boolean shift, nameSet;
-    private Player player;
+    private CorePlayer player;
     
     private Notification display;
     private DungeonServerInterface server;
@@ -35,13 +37,13 @@ public class ChatScreen extends javax.swing.JFrame {
     public ChatScreen() {
         shift = false;
         nameSet = false;
-        player = new Player();
-        player.setName("Unamed Player");
+        player = new CorePlayer("Unamed Player");
+        //player.setName();
         initComponents();
         initGame();
     }
     
-    public ChatScreen(Player plr) {
+    public ChatScreen(CorePlayer plr) {
         this.shift = false;
         this.nameSet = false;
         this.player = plr;
