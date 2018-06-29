@@ -83,15 +83,54 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     }
 
     @Override
-    public void wrongCommandMessage(String message) throws RemoteException {
+    public void wrongCommandMessage() throws RemoteException {
         try {
             textArea.append("[Dungeon Master]: I can't understand your request!\n"
-                          + "[Dungeon Master]: Please, check your message and try again!\n"
-                          + message);
+                          + "[Dungeon Master]: Please, check your message and try again! Or type /help for help.\n");
             System.out.println("Remote_Cliente_Impl -> Wrong command message.\n");
         } catch (Exception e) {
             System.err.println("Remote_Cliente_Impl -> Error with the wrong command message.");
         };
+    }
 
+    /*Note:
+    * The methods helpMessage, locationInformationMessage and movementMessage
+    * are essentially the same. The difference happens only on the server side.
+    * However, it is good to keep it.
+    */
+    
+    @Override
+    public void helpMessage(String message) throws RemoteException {
+       try {
+            textArea.append("[Dungeon Master]: "+message+"\n");
+            System.out.println("Remote_Cliente_Impl -> Help message.\n");
+        } catch (Exception e) {
+            System.err.println("Remote_Cliente_Impl -> Error with the help message.");
+        };
+    }
+
+    @Override
+    public void locationInformationMessage(String message) throws RemoteException {
+        try {
+            textArea.append("[Dungeon Master]: "+message+"\n");
+            System.out.println("Remote_Cliente_Impl -> Look information message.\n");
+        } catch (Exception e) {
+            System.err.println("Remote_Cliente_Impl -> Error with the look information message.");
+        };
+    }
+
+    @Override
+    public void movementMessage(String message) throws RemoteException {
+        try {
+            textArea.append("[Dungeon Master]: "+message+"\n");
+            System.out.println("Remote_Cliente_Impl -> Movement message.\n");
+        } catch (Exception e) {
+            System.err.println("Remote_Cliente_Impl -> Error with the movement message.");
+        };
+    }
+
+    @Override
+    public String getPlayerName() throws RemoteException {
+        return name;
     }
 }

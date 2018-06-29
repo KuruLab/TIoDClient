@@ -127,6 +127,7 @@ public class ChatScreen extends javax.swing.JFrame {
         dungeonChat.setForeground(new java.awt.Color(255, 255, 0));
         dungeonChat.setLineWrap(true);
         dungeonChat.setRows(1);
+        dungeonChat.setWrapStyleWord(true);
         jScrollPane6.setViewportView(dungeonChat);
 
         jSplitPane2.setTopComponent(jScrollPane6);
@@ -135,6 +136,7 @@ public class ChatScreen extends javax.swing.JFrame {
         playerChat.setForeground(new java.awt.Color(255, 255, 0));
         playerChat.setLineWrap(true);
         playerChat.setRows(1);
+        playerChat.setWrapStyleWord(true);
         playerChat.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 playerChatKeyPressed(evt);
@@ -212,7 +214,7 @@ public class ChatScreen extends javax.swing.JFrame {
         else if(shift == false && evt.getKeyCode() == KeyEvent.VK_ENTER){
             String chatContent = playerChat.getText();
             try {
-                //dungeonChat.append("["+playerName+"]: "+chatContent+"\n");
+                dungeonChat.append("["+playerName+"]: "+chatContent+"\n");
                 server.proccessCommand(display, playerName, chatContent);
             } catch (RemoteException ex) {
                 Logger.getLogger(ChatScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
