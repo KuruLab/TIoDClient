@@ -186,6 +186,9 @@
 		"condition": "A"
 	},
 	{
+		"lore": "This is the lore text. It always appears when you look for information. It doesn't change during gameplay. ",
+		"info": "This is the info. This field is reserved for events of the gameplay that changes the room's state. ",
+		"first_time": "Welcome to the Pretorian Tombs! This text will be displayed only when you enter the room for the very first time. ",
 		"id": "18",
 		"position": [246.0, 228.0, 0.0],
 		"width": 16.0,

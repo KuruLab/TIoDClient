@@ -71,15 +71,11 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     public String getName() {
         return name;
     }
-
+    
+    //Note que este método não é, mas pode ser 
     @Override
-    public void newLocationMessage(String location) throws RemoteException {
-        try {
-            textArea.append("[Dungeon Master]: You are now at "+location.toString()+".\n");
-            System.out.println("Remote_Cliente_Impl -> The client " + name + " is "+ location.toString() +".\n");
-        } catch (Exception e) {
-            System.err.println("Remote_Cliente_Impl -> Error within the new location message.");
-        };
+    public String getPlayerName() throws RemoteException {
+        return name;
     }
 
     @Override
@@ -94,8 +90,8 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     }
 
     /*Note:
-    * The methods helpMessage, locationInformationMessage and movementMessage
-    * are essentially the same. The difference happens only on the server side.
+    * The methods help, location, movement and loot are essentially the same.
+    * The difference happens only on the server side.
     * However, it is good to keep it.
     */
     
@@ -130,7 +126,43 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     }
 
     @Override
-    public String getPlayerName() throws RemoteException {
-        return name;
+    public void lootMessage(String message) throws RemoteException {
+        try {
+            textArea.append("[Dungeon Master]: "+message+"\n");
+            System.out.println("Remote_Cliente_Impl -> Loot message.\n");
+        } catch (Exception e) {
+            System.err.println("Remote_Cliente_Impl -> Error with the loot message.");
+        };
+    }
+
+    @Override
+    public void inventoryMessage(String message) throws RemoteException {
+        try {
+            textArea.append("[Dungeon Master]: "+message+"\n");
+            System.out.println("Remote_Cliente_Impl -> Inventory message.\n");
+        } catch (Exception e) {
+            System.err.println("Remote_Cliente_Impl -> Error with the inv. message.");
+        };
+    }
+    
+    
+    @Override
+    public void attackMessage(String message) throws RemoteException {
+        try {
+            textArea.append("[Dungeon Master]: "+message+"\n");
+            System.out.println("Remote_Cliente_Impl -> Attack message.\n");
+        } catch (Exception e) {
+            System.err.println("Remote_Cliente_Impl -> Error with the attack message.");
+        };
+    }
+
+    @Override
+    public void historicMessage(String message) throws RemoteException {
+        try {
+            textArea.append("[Dungeon Master]: "+message+"\n");
+            System.out.println("Remote_Cliente_Impl -> Historic message.\n");
+        } catch (Exception e) {
+            System.err.println("Remote_Cliente_Impl -> Error with the historic message.");
+        };
     }
 }
