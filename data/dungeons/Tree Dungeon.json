@@ -1,26 +1,25 @@
 {
-"dungeonID": "Testing Dungeon",
+"dungeonID": "Tree Dungeon",
 "levels": [
 	{
 	"levelID": "The Vault of the Duck",
-	"tier": 3,
+	"tier": 2,
 	"parent": "null",
 	"leafs": [
-		"Where Lie the Gods",
+		"Where Lie the Gods", "Pretorian Tombs",
 		]
 	},
 	{
 	"levelID": "Where Lie the Gods",
-	"tier": 2,
+	"tier": 1,
 	"parent": "The Vault of the Duck",
 	"leafs": [
-		"Pretorian Tombs",
 		]
 	},
 	{
 	"levelID": "Pretorian Tombs",
 	"tier": 1,
-	"parent": "Where Lie the Gods",
+	"parent": "The Vault of the Duck",
 	"leafs": [
 		]
 	},

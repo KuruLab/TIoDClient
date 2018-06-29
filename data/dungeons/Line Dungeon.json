@@ -1,0 +1,28 @@
+{
+"dungeonID": "Line Dungeon",
+"levels": [
+	{
+	"levelID": "The Vault of the Duck",
+	"tier": 3,
+	"parent": "null",
+	"leafs": [
+		"Where Lie the Gods",
+		]
+	},
+	{
+	"levelID": "Where Lie the Gods",
+	"tier": 2,
+	"parent": "The Vault of the Duck",
+	"leafs": [
+		"Pretorian Tombs",
+		]
+	},
+	{
+	"levelID": "Pretorian Tombs",
+	"tier": 1,
+	"parent": "Where Lie the Gods",
+	"leafs": [
+		]
+	},
+],
+}

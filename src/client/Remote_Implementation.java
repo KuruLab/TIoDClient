@@ -1,6 +1,5 @@
 package client;
 
-import game.CorePlayer;
 import java.rmi.*;
 import java.rmi.server.*;
 import javax.swing.JTextArea;
@@ -12,14 +11,13 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     // GUI modificada pelo servidor
     private JTextArea textArea;
     private String name;
-    private CorePlayer player;
 
     // *******************************************************************************************
     // Construtor da classe Remote_Implementation que recebe uma área de texto para mostrar as mensagens
     // *******************************************************************************************
-    public Remote_Implementation(CorePlayer player, JTextArea text) throws RemoteException {
-           this.player = player;
-           this.textArea = text;
+    public Remote_Implementation(String name, JTextArea text) throws RemoteException {
+        this.name = name;   
+        this.textArea = text;
     }
 
     // **************************************************************************************** 
@@ -34,7 +32,7 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
             
             System.out.println("JoinMessage -> "+ getName());
         } catch (Exception e) {
-            System.out.println("DisplayMessage -> Error sending the message.");
+            System.err.println("DisplayMessage -> Error sending the message.");
         };
     }
 
@@ -45,9 +43,9 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
     @SuppressWarnings("empty-statement")
     public void sendMessage(String name, String message) throws RemoteException {
         try {
-            textArea.append(name + " says : " + message + "\n");
+            textArea.append("["+ name + "]: " + message + "\n");
         } catch (Exception e) {
-            System.out.println("Remote_Cliente_Impl -> Error sending the message.");
+            System.err.println("Remote_Cliente_Impl -> Error sending the message.");
         };
     }
 
@@ -61,7 +59,7 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
             textArea.append(name + " left the chat.\n");
             System.out.println("Remote_Cliente_Impl -> The client " + name + " left the chat.\n");
         } catch (Exception e) {
-            System.out.println("Remote_Cliente_Impl -> Error sending the message.");
+            System.err.println("Remote_Cliente_Impl -> Error sending the message.");
         };
     }
 
@@ -72,5 +70,28 @@ public class Remote_Implementation extends UnicastRemoteObject implements Notifi
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void newLocationMessage(String location) throws RemoteException {
+        try {
+            textArea.append("[Dungeon Master]: You are now at "+location.toString()+".\n");
+            System.out.println("Remote_Cliente_Impl -> The client " + name + " is "+ location.toString() +".\n");
+        } catch (Exception e) {
+            System.err.println("Remote_Cliente_Impl -> Error within the new location message.");
+        };
+    }
+
+    @Override
+    public void wrongCommandMessage(String message) throws RemoteException {
+        try {
+            textArea.append("[Dungeon Master]: I can't understand your request!\n"
+                          + "[Dungeon Master]: Please, check your message and try again!\n"
+                          + message);
+            System.out.println("Remote_Cliente_Impl -> Wrong command message.\n");
+        } catch (Exception e) {
+            System.err.println("Remote_Cliente_Impl -> Error with the wrong command message.");
+        };
+
     }
 }

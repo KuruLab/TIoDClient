@@ -20,8 +20,8 @@ import com.bulenkov.darcula.DarculaLaf;
 import engine.DungeonGenerator;
 import engine.LevelGenerator;
 import game.CorePlayer;
+import server.DungeonServer;
 
-import gui.Main;
 import java.io.File;
 import java.io.FileFilter;
 import java.rmi.RemoteException;
@@ -32,7 +32,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicLookAndFeel;
-import server.DungeonServer;
 
 /**
  *
@@ -94,15 +93,35 @@ public class MenuScreen extends javax.swing.JFrame {
         cancelButton.setEnabled(!mode);
     }
 
-    private CorePlayer getNewPlayerInstance() {
+    /*the client won't have a player instance anymore
+    * it will stay in server
+    */
+    /*private CorePlayer getNewPlayerInstance() {
         CorePlayer player = new CorePlayer(playerName.getText()); // -> player.setName(playerName.getText());
         return player;
-    }
+    }*/
 
     private void join() {
         IPTextFieldVerifier verifier = new IPTextFieldVerifier();
         if (verifier.verify(ipTextField)) {
             System.out.println("IP Verified!");
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        /* issue: if the connection is refused for any reason,
+                        *   the program will throw an exception and the it will close.
+                        *   the user won't have a friendly feedback
+                        */
+                        Thread.sleep(1000);
+                        chatScreen = new ChatScreen(playerName.getText(), ipTextField.getText());
+                        chatScreen.setVisible(true);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(getClass().getName(), ex.getMessage());
+                    }
+                }
+            });
+
+            this.setVisible(false);
         } else {
             ipTextField.setText("127.0.0.1");
         }
@@ -133,7 +152,7 @@ public class MenuScreen extends javax.swing.JFrame {
                 public void run() {
                     try {
                         Thread.sleep(1000);
-                        chatScreen = new ChatScreen(getNewPlayerInstance());
+                        chatScreen = new ChatScreen(playerName.getText(), "localhost");
                         chatScreen.setVisible(true);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(getClass().getName(), ex.getMessage());
@@ -388,7 +407,7 @@ public class MenuScreen extends javax.swing.JFrame {
             BasicLookAndFeel darcula = new DarculaLaf();
             UIManager.setLookAndFeel(darcula);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MenuScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

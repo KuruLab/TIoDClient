@@ -1,22 +1,12 @@
 package client;
 
-import com.bulenkov.darcula.DarculaLaf;
+import server.DungeonServerInterface;
 
-import game.CorePlayer;
-
-import gui.Main;
 import java.awt.event.KeyEvent;
 import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.UIManager;
-import javax.swing.plaf.basic.BasicLookAndFeel;
-import models.Command;
-import models.CommandFactory;
-import server.DungeonServerInterface;
 
 /**
  *
@@ -24,12 +14,13 @@ import server.DungeonServerInterface;
  */
 public class ChatScreen extends javax.swing.JFrame {
    
-    private HashMap<String, Command> cmdMap;
+   // private HashMap<String, Command> cmdMap;
     private boolean shift, nameSet;
-    private CorePlayer player;
+    private String playerName;
     
     private Notification display;
     private DungeonServerInterface server;
+    private String serverIP;
     
     /**
      * Creates new form MainFrame
@@ -37,26 +28,27 @@ public class ChatScreen extends javax.swing.JFrame {
     public ChatScreen() {
         shift = false;
         nameSet = false;
-        player = new CorePlayer("Unamed Player");
-        //player.setName();
+        playerName = "Unamed Player";
+        serverIP = "localhost";
         initComponents();
         initGame();
     }
     
-    public ChatScreen(CorePlayer plr) {
+    public ChatScreen(String plrName, String ip) {
         this.shift = false;
         this.nameSet = false;
-        this.player = plr;
+        this.playerName = plrName;
+        this.serverIP = ip;
         initComponents();
         initGame(); 
     }
     
     public void initGame(){
-        CommandFactory cmdfactory = new CommandFactory();
+        /*CommandFactory cmdfactory = new CommandFactory();
         Command cmdname = cmdfactory.defaultNameCommand();
         cmdMap = new HashMap<>();
-        cmdMap.put(cmdname.getPrimary(), cmdname);
-        dungeonChat.setText("[Dungeon Master]: Hello mortal!\n\n");
+        cmdMap.put(cmdname.getPrimary(), cmdname);*/
+        dungeonChat.setText("[Dungeon Master]: Hello mortal!\n");
         
         rmiConnection();
         login();
@@ -67,7 +59,7 @@ public class ChatScreen extends javax.swing.JFrame {
         // Obter um socket Cliente RMI, invocacando o método lookup("rmichat") da classe Naming RMI
         // ****************************************************************************************        
         try {
-            Remote remoteObject = Naming.lookup("rmi://localhost:1099/TIoDungeoneering");
+            Remote remoteObject = Naming.lookup("rmi://"+serverIP+":1099/TIoDungeoneering");
 
             // Se interface esta OK
             if (remoteObject instanceof DungeonServerInterface) {
@@ -88,14 +80,14 @@ public class ChatScreen extends javax.swing.JFrame {
     }
     
     private Notification getRemoteImpl() throws RemoteException {
-        return new Remote_Implementation(player, dungeonChat);
+        return new Remote_Implementation(playerName, dungeonChat);
     }
     
     private void login() {
         try {
-            server.join(display, player.getName());
+            server.join(display, playerName);
         } catch (RemoteException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
     }
     
@@ -219,7 +211,12 @@ public class ChatScreen extends javax.swing.JFrame {
         }
         else if(shift == false && evt.getKeyCode() == KeyEvent.VK_ENTER){
             String chatContent = playerChat.getText();
-            dungeonChat.append("["+player.getName()+"]: "+chatContent+"\n");
+            try {
+                //dungeonChat.append("["+playerName+"]: "+chatContent+"\n");
+                server.proccessCommand(display, playerName, chatContent);
+            } catch (RemoteException ex) {
+                Logger.getLogger(ChatScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
             playerChat.setText("");
         }
         else if(shift == true && evt.getKeyCode() == KeyEvent.VK_ENTER){
@@ -230,13 +227,13 @@ public class ChatScreen extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    /*public static void main(String args[]) {
         
         try {
             BasicLookAndFeel darcula = new DarculaLaf();
             UIManager.setLookAndFeel(darcula);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChatScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -244,7 +241,7 @@ public class ChatScreen extends javax.swing.JFrame {
                 new ChatScreen().setVisible(true);
             }
         });
-    }
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea dungeonChat;
